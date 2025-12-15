@@ -32,12 +32,12 @@ while True:
         continue
 
     #Calculamos la diferencia entre el primer frame y los frames subsecuentes y guardamos el resultado en la variable delta_frame
-    
+    delta_frame = cv2.absdiff(first_frame, gray)
 
     #mostramos la imagen en gris
     cv2.imshow("Gray frame", gray)
     #mostramos la diferencia ente ambos
-    
+    cv2.imshow("Delta frame", delta_frame)
     
     #Se mostrará un frame por milisegundo
     key = cv2.waitKey(1)
