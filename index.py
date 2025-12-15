@@ -20,6 +20,7 @@ while True:
     a mayor ancho más desenfocada estará la imagen. Si lo dejamos en 0, opencv calculará automáticamente una desviación apropiada
     a partir del kernel
     """
+    gray = cv2.GaussianBlur(gray, (21,21), 0)
     
     """
     En la primera iteración, first_Frame será igual a None, por lo que le asignaremos el valor del primer
