@@ -42,6 +42,9 @@ while True:
     #Se mostrará un frame por milisegundo
     key = cv2.waitKey(1)
 
+    #Imprimimos los frames grises desenfocados y los delta frames
+    print(gray)
+    print(delta_frame)
     #Ponemos una tecla especifica para detener el bucle:
     if key == ord("q"):
         break
