@@ -48,6 +48,13 @@ while True:
     """
     tresh_frame = cv2.threshold(delta_frame, 30, 255, cv2.THRESH_BINARY)[1]
 
+    """
+    Para suavizar un poco el contorno de las zonas blancas usamos el método dilate, este recibe sólo tres argumentos, 
+    la imagen sobre la cual se aplicará, un array de kernel, que podemos dejar como None en caso de no necesitarlo, y 
+    el argumento de palabra clave iterations, que define el número de veces que se aplicará el algoritmo, en este caso 2.
+    """
+    tresh_frame = cv2.dilate(tresh_frame, None, iterations=2)
+
     #mostramos la imagen en gris
     cv2.imshow("Gray frame", gray)
     #mostramos la diferencia ente ambos
