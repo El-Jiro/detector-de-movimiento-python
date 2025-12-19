@@ -46,14 +46,14 @@ while True:
     Devolverá una tupla con dos valores, pero en el caso del TRESH_BINARY sólo nos interesa el segundo, el primero
     lo podemos ignorar.
     """
-    tresh_delta = cv2.threshold(delta_frame, 30, 255, cv2.THRESH_BINARY)[1]
+    tresh_frame = cv2.threshold(delta_frame, 30, 255, cv2.THRESH_BINARY)[1]
 
     #mostramos la imagen en gris
     cv2.imshow("Gray frame", gray)
     #mostramos la diferencia ente ambos
     cv2.imshow("Delta frame", delta_frame)
     #mostramos la imagen umbralizada
-    cv2.imshow("Treshold frame", tresh_delta)
+    cv2.imshow("Treshold frame", tresh_frame)
     
     #Se mostrará un frame por milisegundo
     key = cv2.waitKey(1)
@@ -61,7 +61,7 @@ while True:
     #Imprimimos los frames grises desenfocados y los delta frames
     print(gray)
     print(delta_frame)
-    print(tresh_delta)
+    print(tresh_frame)
 
     #Especificamos una tecla para detener el bucle:
     if key == ord("q"):
