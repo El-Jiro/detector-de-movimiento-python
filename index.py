@@ -34,10 +34,26 @@ while True:
     #Calculamos la diferencia entre el primer frame y los frames subsecuentes y guardamos el resultado en la variable delta_frame
     delta_frame = cv2.absdiff(first_frame, gray)
 
+    """
+    Ahora calcularemos el ummbral o treshold a partir del delta_frame utilizando la función homónima de cv2, 
+    esta función lo que hará será simplificar la imagen asignando un color a cada píxel que se encuentre
+    dentro del umbral definido por nosotros, mientras que si está fuera de ese umbral se le asignará negro.
+    
+    Recibe cuatro argumentos: la imagen con la que trabajará, el umbral, que en este caso es 30, el color que 
+    le asignaremos a los píxeles que se encuentren dentro de dicho umbral, en este caso 255 (blanco), y el algoritmo
+    de umbralización, en este caso binario. 
+
+    Devolverá una tupla con dos valores, pero en el caso del TRESH_BINARY sólo nos interesa el segundo, el primero
+    lo podemos ignorar.
+    """
+    tresh_delta = cv2.threshold(delta_frame, 30, 255, cv2.THRESH_BINARY)[1]
+
     #mostramos la imagen en gris
     cv2.imshow("Gray frame", gray)
     #mostramos la diferencia ente ambos
     cv2.imshow("Delta frame", delta_frame)
+    #mostramos la imagen umbralizada
+    cv2.imshow("Treshold frame", tresh_delta)
     
     #Se mostrará un frame por milisegundo
     key = cv2.waitKey(1)
@@ -45,10 +61,11 @@ while True:
     #Imprimimos los frames grises desenfocados y los delta frames
     print(gray)
     print(delta_frame)
-    #Ponemos una tecla especifica para detener el bucle:
+    print(tresh_delta)
+
+    #Especificamos una tecla para detener el bucle:
     if key == ord("q"):
         break
-
     
 #Cuando hayamos terminado de grabar llamamos al método release de nuestro objeto video y destruimos las ventanas
 video.release()
