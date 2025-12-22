@@ -94,6 +94,8 @@ while True:
     cv2.imshow("Delta frame", delta_frame)
     #mostramos la imagen umbralizada
     cv2.imshow("Treshold frame", tresh_frame)
+    #mostramos el frame original a color son sus respectivos rectángulos
+    cv2.imshow("Color frame", frame)
     
     #Se mostrará un frame por milisegundo
     key = cv2.waitKey(1)
@@ -102,6 +104,7 @@ while True:
     print(gray)
     print(delta_frame)
     print(tresh_frame)
+    print(frame)
 
     #Especificamos una tecla para detener el bucle:
     if key == ord("q"):
