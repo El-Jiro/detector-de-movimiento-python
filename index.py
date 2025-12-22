@@ -10,7 +10,7 @@ while True:
     check, frame = video.read()
         
     #Convertimos la imagen a escala de grises:
-    gray= cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
     """
     Aplicamos un desenfoque gaussiano para suavizar los bordes y mejorar la detección, este método recibe
@@ -49,11 +49,26 @@ while True:
     tresh_frame = cv2.threshold(delta_frame, 30, 255, cv2.THRESH_BINARY)[1]
 
     """
-    Para suavizar un poco el contorno de las zonas blancas usamos el método dilate, este recibe sólo tres argumentos, 
-    la imagen sobre la cual se aplicará, un array de kernel, que podemos dejar como None en caso de no necesitarlo, y 
-    el argumento de palabra clave iterations, que define el número de veces que se aplicará el algoritmo, en este caso 2.
+    Para suavizar un poco el contorno de las zonas blancas y eliminar los enormaes huecos negros usamos el método dilate, 
+    este recibe sólo tres argumentos,  la imagen sobre la cual se aplicará, un array de kernel, que podemos dejar como None 
+    en caso de no necesitarlo, y  el argumento de palabra clave iterations, que define el número de veces que se aplicará 
+    el algoritmo, en este caso 2.
     """
     tresh_frame = cv2.dilate(tresh_frame, None, iterations=2)
+
+    """
+    Ahora detectaremos los contornos de los objetos en movimiento a partir de la imagen umbralizada, para esto utilizamos
+    el método  cv2.findConutours, este recibe tres argumentos; la imagen con la que se trabajará (en este caso llamaremos al método
+    copy de nuestro objeto treshold frame para no modificar la imagen original), la cual debe ser binaria y tener objetos en blanco 
+    con fondo negro, el modo de recuperación, que define cuáles contornos se recuperarán y cómo se relacionan jerárquicamente entre ellos, 
+    y la aproximación del contorno, esta controla cómo se almacenarán los contornos, sólo puede tomar dos valores; cv2.CHAIN_APPROX_NONE 
+    que guarda todos los puntos, o cv2.CHAIN_APPROX_SIMPLE que elimina los puntos redundantes.
+
+    Este método retorna dos valores: contours, una lista de arrays con todas las coordenadas de los contornos encontrados en cada fila 
+    de pixeles, y hierarchy, que determina la relación jeráraquica entre contornos, esta última no es relevante para nuestro caso ya que 
+    usaremos un modo de recuperación no-jerarquizado, así que almacenaremos el valor en una variable anónima definida por un guión bajo (_)
+    """
+    contours, _ = cv2.findContours(tresh_frame.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
     #mostramos la imagen en gris
     cv2.imshow("Gray frame", gray)
