@@ -1,6 +1,11 @@
 import cv2
 
+#Llamamos al método VideoCapture que recibe como único argumento un número entero, el cuál representa una webcam del PC,
+#para usar la webcam default que viene integrada en nuestro equipo pasamos un 0
 video = cv2.VideoCapture(0)
+
+#Creamos una lista para guardar el status de cada frame 
+status_list: list[int] = []
 
 #Definimos una variable para guardar el primer frame del vídeo y le asignamos el valor de None
 first_frame = None
@@ -52,8 +57,8 @@ while True:
     tresh_frame = cv2.threshold(delta_frame, 30, 255, cv2.THRESH_BINARY)[1]
 
     """
-    Para suavizar un poco el contorno de las zonas blancas y eliminar los enormaes huecos negros usamos el método dilate, 
-    este recibe sólo tres argumentos,  la imagen sobre la cual se aplicará, un array de kernel, que podemos dejar como None 
+    Para suavizar un poco el contorno de las zonas blancas y eliminar los enormes huecos negros usamos el método dilate, 
+    este recibe sólo tres argumentos, la imagen sobre la cual se aplicará, un array de kernel, que podemos dejar como None 
     en caso de no necesitarlo, y  el argumento de palabra clave iterations, que define el número de veces que se aplicará 
     el algoritmo, en este caso 2.
     """
@@ -93,7 +98,8 @@ while True:
             """
             cv2.rectangle(frame, (x, y), (x+w, y+h), (0,255,0), 3)
         
-
+    #Antes de mostrar los vídeos añadimos a la lista el valor de status para el frame actual
+    status_list.append(status)
     #mostramos la imagen en gris
     cv2.imshow("Gray frame", gray)
     #mostramos la diferencia ente ambos
@@ -110,8 +116,9 @@ while True:
     if key == ord("q"):
         break
     
-    #Imprimimos el status al final de cada iteración
-    print(status)
+
+#imprimimos la lista al finalizar la captura de vídeo
+print(status_list)
 
 #Cuando hayamos terminado de grabar llamamos al método release de nuestro objeto video y destruimos las ventanas
 video.release()
