@@ -70,6 +70,24 @@ while True:
     """
     contours, _ = cv2.findContours(tresh_frame.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
+     #A continuación iteraremos sobre la lista de contornos con un bucle for y dejaremos sólo aquellos cuya área sea mayor o igual a 1000
+    for c in contours:
+
+        if cv2.contourArea(contour=c) < 1000:
+            continue 
+        else:
+            #Usamos el método bounding rect para obtener las coordenadas, ancho y alto del rectángulo mínimo que encierra completamente
+            #a nuestro objeto en movimiento, recibe como único parámetro el array de contorno
+            x, y, w, h = cv2.boundingRect(c)
+            """
+            Ahora dibujamos el rectángulo en nuestra imagen con el método cv2.rectangle, le pasamos el frame original a color, 
+            una tupla con las coordenadas iniciales del rectángulo (x,y), otra tupla con las coordenadas finales (x+w,y+h), una
+            tercera tupla con el color del rectángulo en formato BGR, y un número entero que representa el ancho de la línea del
+            rectángulo
+            """
+            cv2.rectangle(frame, (x, y), (x+w, y+h), (0,255,0), 3)
+        
+
     #mostramos la imagen en gris
     cv2.imshow("Gray frame", gray)
     #mostramos la diferencia ente ambos
