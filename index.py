@@ -7,8 +7,11 @@ first_frame = None
 
 while True:
     
+    #Empezamos a capturar el vídeo
     check, frame = video.read()
-        
+
+    #Definimos un status 0, que significa que no hay movimiento
+    status: int = 0
     #Convertimos la imagen a escala de grises:
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
 
@@ -70,12 +73,15 @@ while True:
     """
     contours, _ = cv2.findContours(tresh_frame.copy(), cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
-     #A continuación iteraremos sobre la lista de contornos con un bucle for y dejaremos sólo aquellos cuya área sea mayor o igual a 1000
+    #A continuación iteraremos sobre la lista de contornos con un bucle for y dejaremos sólo aquellos cuya área sea mayor o igual a 10000
     for c in contours:
 
-        if cv2.contourArea(contour=c) < 1000:
+        if cv2.contourArea(contour=c) < 10000:
             continue 
         else:
+            #En cuanto encontremos un área mayor a 10000 cambiamos el status a 1, es decir que se ha detectado un objeto en movimiento
+            status = 1
+
             #Usamos el método bounding rect para obtener las coordenadas, ancho y alto del rectángulo mínimo que encierra completamente
             #a nuestro objeto en movimiento, recibe como único parámetro el array de contorno
             x, y, w, h = cv2.boundingRect(c)
@@ -100,16 +106,13 @@ while True:
     #Se mostrará un frame por milisegundo
     key = cv2.waitKey(1)
 
-    #Imprimimos los frames grises desenfocados y los delta frames
-    print(gray)
-    print(delta_frame)
-    print(tresh_frame)
-    print(frame)
-
     #Especificamos una tecla para detener el bucle:
     if key == ord("q"):
         break
     
+    #Imprimimos el status al final de cada iteración
+    print(status)
+
 #Cuando hayamos terminado de grabar llamamos al método release de nuestro objeto video y destruimos las ventanas
 video.release()
 cv2.destroyAllWindows()
