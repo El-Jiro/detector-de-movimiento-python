@@ -1,4 +1,4 @@
-import cv2
+import cv2, pandas
 from datetime import datetime
 
 #Llamamos al método VideoCapture que recibe como único argumento un número entero, el cuál representa una webcam del PC,
@@ -8,6 +8,7 @@ video = cv2.VideoCapture(0)
 #Creamos una lista para guardar el status de cada frame, la inicializamos con dos elementos None para no tener un IndexError al
 #comparar los status en la primera iteración del bucle while
 status_list: list[int] = [None, None]
+
 #Creamos otra lista para guardar las marcas de tiempo en las que se ha detectado un cambio en el movimiento
 times: list[datetime] = []
 
@@ -133,9 +134,17 @@ while True:
         break
     
 
-#imprimimos la lista al finalizar la captura de vídeo
+#imprimimos las listas de status y tiempos al finalizar la captura de vídeo
 print(status_list)
 print(times)
+
+#Creamos un DataFrame de pandas con las columnas "Inicio" y "Fin"
+df = pandas.DataFrame(zip(times[::2], times[1::2]),
+    columns=["Inicio", "Fin"])
+
+#Guardamos los valores en un archivo csv mediante el método to_csv de nuestro dataframe, el cual recibe como único argumento obligatorio
+#la ruta donde se guardará el archivo
+df.to_csv("times.csv")
 
 #Cuando hayamos terminado de grabar llamamos al método release de nuestro objeto video y destruimos las ventanas
 video.release()
