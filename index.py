@@ -5,8 +5,9 @@ from datetime import datetime
 #para usar la webcam default que viene integrada en nuestro equipo pasamos un 0
 video = cv2.VideoCapture(0)
 
-#Creamos una lista para guardar el status de cada frame 
-status_list: list[int] = []
+#Creamos una lista para guardar el status de cada frame, la inicializamos con dos elementos None para no tener un IndexError al
+#comparar los status en la primera iteración del bucle while
+status_list: list[int] = [None, None]
 #Creamos otra lista para guardar las marcas de tiempo en las que se ha detectado un cambio en el movimiento
 times: list[datetime] = []
 
@@ -105,6 +106,13 @@ while True:
         
     #Antes de mostrar los vídeos añadimos a la lista el valor de status para el frame actual
     status_list.append(status)
+
+    #Creamos una marca de tiempo para cada momento en que cambió el status de 0 a 1 y viceversa, y la guardamos en la nueva lista
+    if status_list[-1] == 0 and status_list[-2] == 1:
+        times.append(datetime.now())
+    elif status_list[-1] == 1 and status_list[-2] == 0:
+        times.append(datetime.now())
+
     #mostramos la imagen en gris
     cv2.imshow("Gray frame", gray)
     #mostramos la diferencia ente ambos
@@ -124,6 +132,7 @@ while True:
 
 #imprimimos la lista al finalizar la captura de vídeo
 print(status_list)
+print(times)
 
 #Cuando hayamos terminado de grabar llamamos al método release de nuestro objeto video y destruimos las ventanas
 video.release()
