@@ -1,4 +1,5 @@
 import cv2
+from datetime import datetime
 
 #Llamamos al método VideoCapture que recibe como único argumento un número entero, el cuál representa una webcam del PC,
 #para usar la webcam default que viene integrada en nuestro equipo pasamos un 0
@@ -6,6 +7,8 @@ video = cv2.VideoCapture(0)
 
 #Creamos una lista para guardar el status de cada frame 
 status_list: list[int] = []
+#Creamos otra lista para guardar las marcas de tiempo en las que se ha detectado un cambio en el movimiento
+times: list[datetime] = []
 
 #Definimos una variable para guardar el primer frame del vídeo y le asignamos el valor de None
 first_frame = None
@@ -22,9 +25,9 @@ while True:
 
     """
     Aplicamos un desenfoque gaussiano para suavizar los bordes y mejorar la detección, este método recibe
-    tres parámetros obligatorios: la imagen que queremos procesar, el kernel, una tupla con dos números impares que determinará
-    el tamaño de una matriz generada automáticamente por opencv, la cual que tanto peso tendrá un determinado píxel 
-    sobre sus vecinos, y un número entero conocido como desviación x o sigma, el cual define el ancho de la camapana de Gauss, 
+    tres parámetros obligatorios: la imagen que queremos procesar, el kernel; una tupla con dos números impares que determinará
+    el tamaño de una matriz (generada automáticamente por opencv) la cual controla que tanto peso tendrá un determinado píxel 
+    sobre sus vecinos, y un número entero conocido como desviación x o sigma, el cual define el ancho de la campana de Gauss, 
     a mayor ancho más desenfocada estará la imagen. Si lo dejamos en 0, opencv calculará automáticamente una desviación apropiada
     a partir del kernel
     """
@@ -43,9 +46,10 @@ while True:
     delta_frame = cv2.absdiff(first_frame, gray)
 
     """
-    Ahora calcularemos el ummbral o treshold a partir del delta_frame utilizando la función homónima de cv2, 
-    esta función lo que hará será simplificar la imagen asignando un color a cada píxel que se encuentre
-    dentro del umbral definido por nosotros, mientras que si está fuera de ese umbral se le asignará negro.
+    A partir del delta_frame, calcularemos el umbral o treshold utilizando la función homónima de cv2, 
+    esta función lo que hará será simplificar la imagen asignando un determinado tono dentro de la escala de grises 
+    a cada píxel que se encuentre dentro del umbral definido por nosotros, mientras que si está fuera de ese umbral 
+    se le asignará negro.
     
     Recibe cuatro argumentos: la imagen con la que trabajará, el umbral, que en este caso es 30, el color que 
     le asignaremos a los píxeles que se encuentren dentro de dicho umbral, en este caso 255 (blanco), y el algoritmo
@@ -66,7 +70,7 @@ while True:
 
     """
     Ahora detectaremos los contornos de los objetos en movimiento a partir de la imagen umbralizada, para esto utilizamos
-    el método  cv2.findConutours, este recibe tres argumentos; la imagen con la que se trabajará (en este caso llamaremos al método
+    el método  cv2.findContours, este recibe tres argumentos; la imagen con la que se trabajará (en este caso llamaremos al método
     copy de nuestro objeto treshold frame para no modificar la imagen original), la cual debe ser binaria y tener objetos en blanco 
     con fondo negro, el modo de recuperación, que define cuáles contornos se recuperarán y cómo se relacionan jerárquicamente entre ellos, 
     y la aproximación del contorno, esta controla cómo se almacenarán los contornos, sólo puede tomar dos valores; cv2.CHAIN_APPROX_NONE 
@@ -87,9 +91,10 @@ while True:
             #En cuanto encontremos un área mayor a 10000 cambiamos el status a 1, es decir que se ha detectado un objeto en movimiento
             status = 1
 
-            #Usamos el método bounding rect para obtener las coordenadas, ancho y alto del rectángulo mínimo que encierra completamente
-            #a nuestro objeto en movimiento, recibe como único parámetro el array de contorno
+            #Usamos el método bounding rect para obtener las coordenadas, ancho y alto del rectángulo mínimo que encierra 
+            #completamente nuestro objeto en movimiento, recibe como único parámetro el array de contorno
             x, y, w, h = cv2.boundingRect(c)
+
             """
             Ahora dibujamos el rectángulo en nuestra imagen con el método cv2.rectangle, le pasamos el frame original a color, 
             una tupla con las coordenadas iniciales del rectángulo (x,y), otra tupla con las coordenadas finales (x+w,y+h), una
