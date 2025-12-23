@@ -127,6 +127,9 @@ while True:
 
     #Especificamos una tecla para detener el bucle:
     if key == ord("q"):
+        #Verificamos si el último status fue 1, en cuyo caso su timestamp del final será el momento en el que terminó la grabación
+        if status == 1:
+            times.append(datetime.now())
         break
     
 
