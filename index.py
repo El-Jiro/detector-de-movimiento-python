@@ -60,7 +60,7 @@ while True:
     Devolverá una tupla con dos valores, pero en el caso del TRESH_BINARY sólo nos interesa el segundo, el primero
     lo podemos ignorar.
     """
-    tresh_frame = cv2.threshold(delta_frame, 30, 255, cv2.THRESH_BINARY)[1]
+    _, tresh_frame = cv2.threshold(delta_frame, 30, 255, cv2.THRESH_BINARY)
 
     """
     Para suavizar un poco el contorno de las zonas blancas y eliminar los enormes huecos negros usamos el método dilate, 
