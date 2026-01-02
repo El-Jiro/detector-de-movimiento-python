@@ -107,6 +107,8 @@ while True:
         
     #Antes de mostrar los vídeos añadimos a la lista el valor de status para el frame actual
     status_list.append(status)
+    #Dejamos sólo los dos últimos items de la lista para ahorrar memoria, ya que son los únicos necesarios para la comparación
+    status_list = status_list[-2:]
 
     #Creamos una marca de tiempo para cada momento en que cambió el status de 0 a 1 y viceversa, y la guardamos en la nueva lista
     if status_list[-1] == 0 and status_list[-2] == 1:
