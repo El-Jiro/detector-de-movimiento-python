@@ -13,5 +13,7 @@ irrelevantes para nuestro gráfico los dejaremos en 0 y 1. También podemos espe
 """
 q = p.quad(left=df["Inicio"], right=df["Fin"], bottom=0, top=1, color="green")
 
-output_file("graph.html")
+#Preparamos el archivo de salida
+output_file("graph.html", title="Gráfico de Movimiento")
+#mostramos el gráfico
 show(p)
